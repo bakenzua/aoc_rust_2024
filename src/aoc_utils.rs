@@ -72,16 +72,37 @@ pub struct GridCoordinate {
 }
 
 impl GridCoordinate {
-  pub fn get_element_to(&self, direction: &Direction) -> GridCoordinate {
+  pub fn move_direction(&mut self, direction: &Direction, distance: i32) {//-> GridCoordinate {
       match direction {
-          Direction::North     => {GridCoordinate{x: self.x,     y: self.y + 1}},
-          Direction::NorthEast => {GridCoordinate{x: self.x + 1, y: self.y + 1}},
-          Direction::East      => {GridCoordinate{x: self.x + 1, y: self.y}}, 
-          Direction::SouthEast => {GridCoordinate{x: self.x + 1, y: self.y - 1}},
-          Direction::South     => {GridCoordinate{x: self.x,     y: self.y - 1}},
-          Direction::SouthWest => {GridCoordinate{x: self.x - 1, y: self.y - 1}},
-          Direction::West      => {GridCoordinate{x: self.x - 1, y: self.y}},
-          Direction::NorthWest => {GridCoordinate{x: self.x - 1, y: self.y + 1}}
+          Direction::North => {
+            self.y += distance;
+          },
+          Direction::NorthEast => {
+            self.x += distance; 
+            self.y += distance;
+          },
+          Direction::East => {
+            self.x += distance;
+          },
+          Direction::SouthEast => {
+            self.x += distance; 
+            self.y -= distance;
+          },
+          Direction::South => {
+            self.y -= distance;
+          },
+          Direction::SouthWest => {
+            self.x -= distance; 
+            
+            self.y -= distance;
+          },
+          Direction::West => {
+            self.x -= distance;
+          },
+          Direction::NorthWest => {
+            self.x -= distance;
+            self.y += distance;
+          }
       }
   }
 }
@@ -92,22 +113,37 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_get_element_to_north_and_south() {
-        let ge = GridCoordinate{
+    fn test_move_direction_north() {
+        let mut ge = GridCoordinate{
             x: 1,
             y: 1
         };
+
+        ge.move_direction(&Direction::North, 1);
+        
         assert_eq!(
-          ge.get_element_to(&Direction::North).x,
-          1
-        );
-        assert_eq!(
-          ge.get_element_to(&Direction::North).y,
+          ge.y,
           2
         );
+
+        ge.move_direction(&Direction::North, 2);
+        
         assert_eq!(
-          ge.get_element_to(&Direction::South).y,
-          0
+          ge.y,
+          4
+        );
+    }
+    #[test]
+    fn test_move_direction_west() {
+        let mut ge = GridCoordinate{
+            x: 1,
+            y: 1
+        };
+        ge.move_direction(&Direction::East, 1);
+
+        assert_eq!(
+          ge.x,
+          2
         );
     }
 

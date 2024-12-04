@@ -50,7 +50,7 @@ fn part_1(file_path: &str) -> i32{
                         candidate.push(
                             *grid.get(&current_location).unwrap_or(&'%')
                         );
-                        current_location = current_location.get_element_to(&direction);
+                        current_location.move_direction(&direction, 1);
                     }
                     // println!("candidate: {candidate}");
                     if candidate == "XMAS" {
@@ -71,23 +71,28 @@ fn part_2(file_path: &str) -> i32{
     
     for pos in grid.keys() {
         if grid.get(pos).unwrap() == &'A' {
+            let mut current_location = pos.clone();
             let mut diag1 = String::new();
             let mut diag2 = String::new();
             
+            current_location.move_direction(&Direction::NorthWest, 1);
             diag1.push(
-                *grid.get(&pos.get_element_to(&Direction::NorthWest)).unwrap_or(&'%')
+                *grid.get(&current_location).unwrap_or(&'%')
             );
             diag1.push('A');
+            current_location.move_direction(&Direction::SouthEast, 2);
             diag1.push(
-                *grid.get(&pos.get_element_to(&Direction::SouthEast)).unwrap_or(&'%')
+                *grid.get(&current_location).unwrap_or(&'%')
             );
 
+            current_location.move_direction(&Direction::West, 2);
             diag2.push(
-                *grid.get(&pos.get_element_to(&Direction::SouthWest)).unwrap_or(&'%')
+                *grid.get(&current_location).unwrap_or(&'%')
             );
             diag2.push('A');
+            current_location.move_direction(&Direction::NorthEast, 2);
             diag2.push(
-                *grid.get(&pos.get_element_to(&Direction::NorthEast)).unwrap_or(&'%')
+                *grid.get(&current_location).unwrap_or(&'%')
             );
             if targets.contains(&&diag1.as_str()) && targets.contains(&&diag2.as_str()) {
                     score = score +1;
