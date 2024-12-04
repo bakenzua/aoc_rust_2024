@@ -98,7 +98,7 @@ fn part_2(file_path: &str) -> i32{
 }
 
 fn parse_to_grid(input: String) -> HashMap<GridCoordinate, char> {
-    let mut grid = HashMap::new();
+    let mut grid: HashMap<GridCoordinate, char> = HashMap::new();
     for (y, line) in input.lines().enumerate() {
         for (x, c) in line.chars().enumerate() {
             grid.insert(
