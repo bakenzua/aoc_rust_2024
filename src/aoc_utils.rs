@@ -52,3 +52,63 @@ i/ *   O   O   * \i
     "#;
     print!("{tree_ascii}\n\n")
 }
+
+
+pub enum Direction {
+  North,
+  NorthEast,
+  East,
+  SouthEast,
+  South,
+  SouthWest,
+  West,
+  NorthWest
+}
+
+#[derive(PartialEq, Eq, Hash, Debug, Clone, Copy)]
+pub struct GridCoordinate {
+    pub x: i32,
+    pub y: i32,
+}
+
+impl GridCoordinate {
+  pub fn get_element_to(&self, direction: &Direction) -> GridCoordinate {
+      match direction {
+          Direction::North     => {GridCoordinate{x: self.x,     y: self.y + 1}},
+          Direction::NorthEast => {GridCoordinate{x: self.x + 1, y: self.y + 1}},
+          Direction::East      => {GridCoordinate{x: self.x + 1, y: self.y}}, 
+          Direction::SouthEast => {GridCoordinate{x: self.x + 1, y: self.y - 1}},
+          Direction::South     => {GridCoordinate{x: self.x,     y: self.y - 1}},
+          Direction::SouthWest => {GridCoordinate{x: self.x - 1, y: self.y - 1}},
+          Direction::West      => {GridCoordinate{x: self.x - 1, y: self.y}},
+          Direction::NorthWest => {GridCoordinate{x: self.x - 1, y: self.y + 1}}
+      }
+  }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    fn test_get_element_to_north_and_south() {
+        let ge = GridCoordinate{
+            x: 1,
+            y: 1
+        };
+        assert_eq!(
+          ge.get_element_to(&Direction::North).x,
+          1
+        );
+        assert_eq!(
+          ge.get_element_to(&Direction::North).y,
+          2
+        );
+        assert_eq!(
+          ge.get_element_to(&Direction::South).y,
+          0
+        );
+    }
+
+}

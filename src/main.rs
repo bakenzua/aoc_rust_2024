@@ -4,6 +4,7 @@ mod aoc_utils;
 mod day_1;
 mod day_2;
 mod day_3;
+mod day_4;
 
 fn main() {
     let args:Vec<String> = env::args().collect();
@@ -13,8 +14,8 @@ fn main() {
         std::process::exit(1);
     }
 
-    let day: i32 = args[1].parse().expect("Please provide a day number.");
-    let part: i32 = args[2].parse().expect("Please provide a part number.");
+    let day: i16 = args[1].parse().expect("Please provide a day number.");
+    let part: i16 = args[2].parse().expect("Please provide a part number.");
 
     aoc_utils::print_xmas_tree();
     println!("\n\n//===========================================//");
@@ -23,13 +24,11 @@ fn main() {
 
 
     // let start = Instant::now();
-    match (day, part) {
-        (1, 1) => day_1::run(1),
-        (1, 2) => day_1::run(2),
-        (2, 1) => day_2::run(1),
-        (2, 2) => day_2::run(2),
-        (3, 1) => day_3::run(1),
-        (3, 2) => day_3::run(2),
+    match day {
+        1 => day_1::run(part),
+        2 => day_2::run(part),
+        3 => day_3::run(part),
+        4 => day_4::run(part),
         _ => {
             println!("Solution for day {} part {} not found.", day, part);
             std::process::exit(1);
