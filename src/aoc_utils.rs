@@ -1,12 +1,10 @@
 use std::fs::read_to_string;
 
 pub fn get_two_numbers_from_lines(file_path: &str) -> (Vec<i32>, Vec<i32>) {
-
     let mut left_list: Vec<i32> = Vec::new();
     let mut right_list: Vec<i32> = Vec::new();
 
-
-    for line in read_to_string(file_path).unwrap().lines(){
+    for line in read_to_string(file_path).unwrap().lines() {
         let mut parts = line.split_whitespace();
         let a: i32 = parts.next().unwrap().parse().unwrap();
         let b: i32 = parts.next().unwrap().parse().unwrap();
@@ -17,19 +15,18 @@ pub fn get_two_numbers_from_lines(file_path: &str) -> (Vec<i32>, Vec<i32>) {
 }
 
 pub fn get_numbers_in_lines(file_path: &str) -> Vec<Vec<i32>> {
+    let mut result: Vec<Vec<i32>> = Vec::new();
 
-  let mut result: Vec<Vec<i32>> = Vec::new();
+    for line in read_to_string(file_path).unwrap().lines() {
+        let parts = line
+            .split_whitespace()
+            .map(|x| x.parse::<i32>().unwrap())
+            .collect();
 
-  for line in read_to_string(file_path).unwrap().lines(){
-      let parts = line
-          .split_whitespace()
-          .map(|x| x.parse::<i32>().unwrap())
-          .collect();
-      
-      result.push(parts);
-  }
+        result.push(parts);
+    }
 
-  result
+    result
 }
 
 pub fn print_xmas_tree() {
@@ -53,16 +50,15 @@ i/ *   O   O   * \i
     print!("{tree_ascii}\n\n")
 }
 
-
 pub enum Direction {
-  North,
-  NorthEast,
-  East,
-  SouthEast,
-  South,
-  SouthWest,
-  West,
-  NorthWest
+    North,
+    NorthEast,
+    East,
+    SouthEast,
+    South,
+    SouthWest,
+    West,
+    NorthWest,
 }
 
 #[derive(PartialEq, Eq, Hash, Debug, Clone, Copy)]
@@ -72,39 +68,40 @@ pub struct GridCoordinate {
 }
 
 impl GridCoordinate {
-  pub fn move_direction(&mut self, direction: &Direction, distance: i32) {//-> GridCoordinate {
-      match direction {
-          Direction::North => {
-            self.y += distance;
-          },
-          Direction::NorthEast => {
-            self.x += distance; 
-            self.y += distance;
-          },
-          Direction::East => {
-            self.x += distance;
-          },
-          Direction::SouthEast => {
-            self.x += distance; 
-            self.y -= distance;
-          },
-          Direction::South => {
-            self.y -= distance;
-          },
-          Direction::SouthWest => {
-            self.x -= distance; 
-            
-            self.y -= distance;
-          },
-          Direction::West => {
-            self.x -= distance;
-          },
-          Direction::NorthWest => {
-            self.x -= distance;
-            self.y += distance;
-          }
-      }
-  }
+    pub fn move_direction(&mut self, direction: &Direction, distance: i32) {
+        //-> GridCoordinate {
+        match direction {
+            Direction::North => {
+                self.y += distance;
+            }
+            Direction::NorthEast => {
+                self.x += distance;
+                self.y += distance;
+            }
+            Direction::East => {
+                self.x += distance;
+            }
+            Direction::SouthEast => {
+                self.x += distance;
+                self.y -= distance;
+            }
+            Direction::South => {
+                self.y -= distance;
+            }
+            Direction::SouthWest => {
+                self.x -= distance;
+
+                self.y -= distance;
+            }
+            Direction::West => {
+                self.x -= distance;
+            }
+            Direction::NorthWest => {
+                self.x -= distance;
+                self.y += distance;
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -114,37 +111,21 @@ mod tests {
 
     #[test]
     fn test_move_direction_north() {
-        let mut ge = GridCoordinate{
-            x: 1,
-            y: 1
-        };
+        let mut ge = GridCoordinate { x: 1, y: 1 };
 
         ge.move_direction(&Direction::North, 1);
-        
-        assert_eq!(
-          ge.y,
-          2
-        );
+
+        assert_eq!(ge.y, 2);
 
         ge.move_direction(&Direction::North, 2);
-        
-        assert_eq!(
-          ge.y,
-          4
-        );
+
+        assert_eq!(ge.y, 4);
     }
     #[test]
     fn test_move_direction_west() {
-        let mut ge = GridCoordinate{
-            x: 1,
-            y: 1
-        };
+        let mut ge = GridCoordinate { x: 1, y: 1 };
         ge.move_direction(&Direction::East, 1);
 
-        assert_eq!(
-          ge.x,
-          2
-        );
+        assert_eq!(ge.x, 2);
     }
-
 }

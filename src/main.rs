@@ -7,7 +7,7 @@ mod day_3;
 mod day_4;
 
 fn main() {
-    let args:Vec<String> = env::args().collect();
+    let args: Vec<String> = env::args().collect();
 
     if args.len() != 3 {
         eprintln!("Usage: cargo run <day> <part>");
@@ -19,9 +19,11 @@ fn main() {
 
     aoc_utils::print_xmas_tree();
     println!("\n\n//===========================================//");
-    println!("//       Advent of code: Day {}, part {}       //", day, part);
+    println!(
+        "//       Advent of code: Day {}, part {}       //",
+        day, part
+    );
     println!("//===========================================//\n");
-
 
     // let start = Instant::now();
     match day {

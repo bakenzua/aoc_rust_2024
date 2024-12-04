@@ -1,7 +1,7 @@
 #![allow(unused_variables)]
 
-use std::fs::read_to_string;
 use regex::Regex;
+use std::fs::read_to_string;
 // use crate::aoc_utils;
 
 const EXAMPLE_1_FILEPATH: &str = "./data/example_3.1.txt";
@@ -9,7 +9,7 @@ const EXAMPLE_2_FILEPATH: &str = "./data/example_3.2.txt";
 const INPUT_1_FILEPATH: &str = "./data/input_3.txt";
 
 // regex function to compile tuples of the operands of each mul() call
-fn regex_muls(text: &str) -> Vec<(i32, i32)>{
+fn regex_muls(text: &str) -> Vec<(i32, i32)> {
     let re: Regex = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
 
     let mut commands = vec![];
@@ -21,8 +21,7 @@ fn regex_muls(text: &str) -> Vec<(i32, i32)>{
 
 // part 1 solver
 fn part_1(file_path: &str) -> i32 {
-
-    // get input data 
+    // get input data
     let corrupt_code: String = read_to_string(file_path).expect("Error reading file: {file_path}");
 
     part_1_calc(&corrupt_code)
@@ -36,18 +35,17 @@ fn part_1_calc(corrupt_code: &str) -> i32 {
         .map(|ops| ops.0 * ops.1)
         .sum();
     result
-
 }
 
 // enum to hold state of parser
 #[derive(PartialEq)]
 enum DoSwitch {
     Do,
-    DoNot
+    DoNot,
 }
 
 // part 2 solver
-fn part_2(file_path: &str) -> i32  {
+fn part_2(file_path: &str) -> i32 {
     let corrupt_code: String = read_to_string(file_path).expect("Error reading file: {file_path}");
     //part_2_calc(&corrupt_code)
     part_2_parse(&corrupt_code)
@@ -55,19 +53,20 @@ fn part_2(file_path: &str) -> i32  {
 
 // part 2 direct parser
 fn part_2_parse(corrupt_code: &str) -> i32 {
-
     // parse string with peekable iterator and enum DoSwitch
     let mut result: i32 = 0;
     let mut do_switch: DoSwitch = DoSwitch::Do;
-    let mut corrupt_code_iter: std::iter::Peekable<std::str::Chars<'_>> = corrupt_code.chars().peekable();
+    let mut corrupt_code_iter: std::iter::Peekable<std::str::Chars<'_>> =
+        corrupt_code.chars().peekable();
 
     while let Some(chr) = corrupt_code_iter.next() {
         match chr {
             'm' => {
                 // if next chars are ul(
                 if corrupt_code_iter.next_if_eq(&'u').is_some()
-                && corrupt_code_iter.next_if_eq(&'l').is_some()
-                && corrupt_code_iter.next_if_eq(&'(').is_some() {
+                    && corrupt_code_iter.next_if_eq(&'l').is_some()
+                    && corrupt_code_iter.next_if_eq(&'(').is_some()
+                {
                     // capture digits until ','
                     let mut number_1 = String::new();
                     while let Some(d) = corrupt_code_iter.next_if(|&chr| chr.is_digit(10)) {
@@ -79,34 +78,38 @@ fn part_2_parse(corrupt_code: &str) -> i32 {
                         while let Some(d) = corrupt_code_iter.next_if(|&chr| chr.is_digit(10)) {
                             number_2.push(d);
                         }
-                    // if next char is ')' then parse the number strings to i32
-                    if corrupt_code_iter.next_if_eq(&')').is_some() 
-                    && do_switch == DoSwitch::Do {
-                        if let (Ok(n1), Ok(n2)) = (number_1.parse::<i32>(), number_2.parse::<i32>()) {
-                            // if we are in a do section, multiply the operands and add to the total
-                            result += n1 * n2
+                        // if next char is ')' then parse the number strings to i32
+                        if corrupt_code_iter.next_if_eq(&')').is_some() && do_switch == DoSwitch::Do
+                        {
+                            if let (Ok(n1), Ok(n2)) =
+                                (number_1.parse::<i32>(), number_2.parse::<i32>())
+                            {
+                                // if we are in a do section, multiply the operands and add to the total
+                                result += n1 * n2
+                            }
                         }
-                    }
                     }
                 }
             }
             'd' => {
                 // if next chars are o()
                 if corrupt_code_iter.next_if_eq(&'o').is_some()
-                && corrupt_code_iter.next_if_eq(&'(').is_some()
-                && corrupt_code_iter.next_if_eq(&')').is_some() {
+                    && corrupt_code_iter.next_if_eq(&'(').is_some()
+                    && corrupt_code_iter.next_if_eq(&')').is_some()
+                {
                     do_switch = DoSwitch::Do;
-                } else 
-                // if next chars are "n't()" - 'd' and 'o' have already been 
+                } else
+                // if next chars are "n't()" - 'd' and 'o' have already been
                 // consumed if this is don't()
-                if corrupt_code_iter.next_if_eq(&'n').is_some() 
-                && corrupt_code_iter.next_if_eq(&'\'').is_some() 
-                && corrupt_code_iter.next_if_eq(&'t').is_some() 
-                && corrupt_code_iter.next_if_eq(&'(').is_some() 
-                && corrupt_code_iter.next_if_eq(&')').is_some() {
+                if corrupt_code_iter.next_if_eq(&'n').is_some()
+                    && corrupt_code_iter.next_if_eq(&'\'').is_some()
+                    && corrupt_code_iter.next_if_eq(&'t').is_some()
+                    && corrupt_code_iter.next_if_eq(&'(').is_some()
+                    && corrupt_code_iter.next_if_eq(&')').is_some()
+                {
                     do_switch = DoSwitch::DoNot;
                 }
-            },
+            }
             _ => continue,
         }
     }
@@ -114,31 +117,28 @@ fn part_2_parse(corrupt_code: &str) -> i32 {
 }
 
 // main entry point for day 3
-pub fn run(part: i16){
-
+pub fn run(part: i16) {
     // part 1
     match part {
         1 => {
             let example_result: i32 = part_1(EXAMPLE_1_FILEPATH);
             println!("Example result: {example_result}");
-    
+
             let question_result: i32 = part_1(INPUT_1_FILEPATH);
             println!("Question result: {question_result}");
-        },
+        }
         2 => {
             let example_result: i32 = part_2(EXAMPLE_2_FILEPATH);
             println!("Example result: {example_result}");
-    
+
             let question_result: i32 = part_2(INPUT_1_FILEPATH);
             println!("Question result: {question_result}");
-        },
+        }
         _ => {
             panic!("Invalid part specified for day 3")
         }
     }
 }
-
-
 
 ///////////////////////////////////////////
 //   Some but not all tests
@@ -152,16 +152,15 @@ mod tests {
     use super::*;
 
     fn get_example_str(part: i32) -> String {
-
         match part {
             1 => {
                 return read_to_string(EXAMPLE_1_FILEPATH)
-                .expect("Error reading file: {file_path}");
-            },
+                    .expect("Error reading file: {file_path}");
+            }
             2 => {
                 return read_to_string(EXAMPLE_2_FILEPATH)
                     .expect("Error reading file: {file_path}");
-            },
+            }
             _ => {
                 panic!("Incorrect part supplied to example_str()")
             }
@@ -170,26 +169,16 @@ mod tests {
 
     #[test]
     fn test_regex_muls_returns_correct_number_of_matches() {
-        assert_eq!(
-            regex_muls(&get_example_str(1)).len(),
-            4 
-        )
+        assert_eq!(regex_muls(&get_example_str(1)).len(), 4)
     }
 
     #[test]
     fn test_part_1_calc() {
-        assert_eq!(
-            part_1_calc(&get_example_str(1)),
-            161
-        )
+        assert_eq!(part_1_calc(&get_example_str(1)), 161)
     }
 
     #[test]
     fn test_part_2_parse() {
-        assert_eq!(
-            77055967,
-            part_2(INPUT_1_FILEPATH)
-        )
+        assert_eq!(77055967, part_2(INPUT_1_FILEPATH))
     }
-
 }
