@@ -19,16 +19,6 @@ fn regex_muls(text: &str) -> Vec<(i32, i32)>{
     commands
 }
 
-// regex function to remove text between do() and don't()
-// unused
-// fn remove_dont_code(text: &str) -> std::borrow::Cow<'_, str> {
-//     let re: Regex = Regex::new(r"don't\(\)\S+do\(\)").unwrap();
-
-//     let res = re.replace_all(text, NoExpand(""));
-//     // print!("{res}");
-//     res
-// }
-
 // part 1 solver
 fn part_1(file_path: &str) -> i32 {
 
@@ -123,20 +113,6 @@ fn part_2_parse(corrupt_code: &str) -> i32 {
     result
 }
 
-
-// original attempt using regexp remove_dont_code() 
-// to remove 'code' between a don't() and a do()
-// works on example not on input!!
-// fn part_2_calc(corrupt_code: &str) -> i32 {
-//     let do_code = remove_dont_code(&corrupt_code);
-//     let result = regex_muls(&do_code)
-//         .iter()
-//         .map(|ops| ops.0 * ops.1)
-//         .sum();
-//     result
-
-// }
-
 // main entry point for day 3
 pub fn run(part: i16){
 
@@ -207,25 +183,6 @@ mod tests {
             161
         )
     }
-
-    #[test]
-    fn test_remove_dont_code() {
-        assert_eq!(
-            "xmul(2,4)&mul[3,7]!^?mul(8,5))",
-            remove_dont_code(&get_example_str(2))
-
-        );
-    }
-
-    // #[test]
-    // fn test_part_2_calc() {
-    //     // original attempt using regexp to chop out the 'code' between a don't() and a do()
-    //     // works on example not on input!!
-    //     assert_eq!(
-    //         48,
-    //         part_2_calc(remove_dont_code(&get_example_str(2)))
-    //     );
-    // }
 
     #[test]
     fn test_part_2_parse() {
