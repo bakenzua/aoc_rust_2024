@@ -1,6 +1,6 @@
 #![allow(unused_variables)]
 
-use std::{collections::HashMap, fs::read_to_string};
+use std::{fs::read_to_string};
 
 const EXAMPLE_FILEPATH: &str = "./data/example_5.txt";
 const INPUT_FILEPATH: &str = "./data/input_5.txt";
@@ -30,15 +30,43 @@ pub fn run(part: i16) {
 }
 
 fn part_1(file_path: &str) -> i32 {
-    let mut score: i32 = 0;
 
-    score
+    let (rules, manual_updates) = parse_file(file_path);
+
+    let mut result: i32 = 0;
+
+    'update_loop: for man_update in &manual_updates {
+        'rule_loop: for rule in &rules {
+
+            // get index of rule element 0, continue to next rule if not found
+            let index1 = match man_update.iter().position(|n| n == &rule.0) {
+                Some(n) => n,
+                None           => continue 'rule_loop
+            };
+
+            // get index of rule element 1, continue to next rule if not found
+            let index2 = match man_update.iter().position(|n| n == &rule.1) {
+                Some(n) => n,
+                None           => continue 'rule_loop
+            };
+            // if rule broken continue to next manual update
+            if index1 > index2 {
+                continue 'update_loop;
+            }
+        }
+        // no rules broken 
+        // add middle element of manual update to result
+        let num = ((man_update.len() - 1) / 2) + 1;
+        result += man_update[num];
+    }
+
+    result
 }
 
 fn part_2(file_path: &str) -> i32 {
     let filetxt = read_to_string(file_path).unwrap();
 
-    let mut score: i32 = 0;
+    let score: i32 = 0;
 
     score
 }

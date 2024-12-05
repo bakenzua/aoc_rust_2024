@@ -32,7 +32,7 @@ fn main() {
         2 => day_2::run(part),
         3 => day_3::run(part),
         4 => day_4::run(part),
-        4 => day_5::run(part),
+        5 => day_5::run(part),
         _ => {
             println!("Solution for day {} part {} not found.", day, part);
             std::process::exit(1);
