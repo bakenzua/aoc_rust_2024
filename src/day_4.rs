@@ -6,7 +6,7 @@ use std::{collections::HashMap, fs::read_to_string};
 const EXAMPLE_FILEPATH: &str = "./data/example_4.txt";
 const INPUT_FILEPATH: &str = "./data/input_4.txt";
 
-// main entry point for day 3
+// main entry point for day 4
 pub fn run(part: i16) {
     // part 1
     match part {

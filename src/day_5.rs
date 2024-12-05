@@ -1,11 +1,11 @@
 #![allow(unused_variables)]
 
-use std::{fs::read_to_string};
+use std::fs::read_to_string;
 
 const EXAMPLE_FILEPATH: &str = "./data/example_5.txt";
 const INPUT_FILEPATH: &str = "./data/input_5.txt";
 
-// main entry point for day 3
+// main entry point for day 5
 pub fn run(part: i16) {
     // part 1
     match part {
@@ -24,37 +24,25 @@ pub fn run(part: i16) {
             println!("Question result: {question_result}");
         }
         _ => {
-            panic!("Invalid part specified for day 4")
+            panic!("Invalid part specified for day 5")
         }
     }
 }
 
 fn part_1(file_path: &str) -> i32 {
-
     let (rules, manual_updates) = parse_file(file_path);
 
     let mut result: i32 = 0;
 
     'update_loop: for man_update in &manual_updates {
         'rule_loop: for rule in &rules {
-
-            // get index of rule element 0, continue to next rule if not found
-            let index1 = match man_update.iter().position(|n| n == &rule.0) {
-                Some(n) => n,
-                None           => continue 'rule_loop
-            };
-
-            // get index of rule element 1, continue to next rule if not found
-            let index2 = match man_update.iter().position(|n| n == &rule.1) {
-                Some(n) => n,
-                None           => continue 'rule_loop
-            };
-            // if rule broken continue to next manual update
-            if index1 > index2 {
-                continue 'update_loop;
+            match update_rule_pass(man_update, rule) {
+                RuleCheckResult::DoesNotApply => continue 'rule_loop,
+                RuleCheckResult::Fail => continue 'update_loop,
+                RuleCheckResult::Pass => continue 'rule_loop,
             }
         }
-        // no rules broken 
+        // no rules broken
         // add middle element of manual update to result
         let num = ((man_update.len() - 1) / 2) + 1;
         result += man_update[num];
@@ -76,6 +64,7 @@ enum ParserState {
     Pages,
 }
 
+// parse file in to a vector of tuple rules and vector of safety manual update page vectors
 fn parse_file(file_path: &str) -> (Vec<(i32, i32)>, Vec<Vec<i32>>) {
     let filetxt = read_to_string(file_path).expect("Error reading file: {file_path}");
 
@@ -115,6 +104,31 @@ fn parse_file(file_path: &str) -> (Vec<(i32, i32)>, Vec<Vec<i32>>) {
     (rules, manual_updates)
 }
 
+enum RuleCheckResult {
+    DoesNotApply,
+    Pass,
+    Fail,
+}
+
+fn update_rule_pass(man_update: &Vec<i32>, rule: &(i32, i32)) -> RuleCheckResult {
+    // get index of rule element 0, continue to next rule if not found
+    let index1 = match man_update.iter().position(|n| n == &rule.0) {
+        Some(n) => n,
+        None => return RuleCheckResult::DoesNotApply,
+    };
+
+    // get index of rule element 1, continue to next rule if not found
+    let index2 = match man_update.iter().position(|n| n == &rule.1) {
+        Some(n) => n,
+        None => return RuleCheckResult::DoesNotApply,
+    };
+    // if rule broken continue to next manual update
+    if index1 > index2 {
+        return RuleCheckResult::Fail;
+    } else {
+        return RuleCheckResult::Pass;
+    }
+}
 ///////////////////////////////////////////
 //   Some but not all tests
 ///////////////////////////////////////////
@@ -131,7 +145,7 @@ mod tests {
 
     #[test]
     fn test_part_2() {
-        // assert_eq!(9, part_2(EXAMPLE_FILEPATH));
+        assert_eq!(123, part_2(EXAMPLE_FILEPATH));
     }
 
     #[test]
