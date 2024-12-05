@@ -77,7 +77,6 @@ fn part_2(file_path: &str) -> i32 {
     // let mut any_fails = true;
     // let mut count = 1;
     for man_update in updates_failing_rule_check.iter_mut() {
-
         // while any_fails {
         //     any_fails = apply_rules_to(man_update, rules.clone());
         //     print!("Count: {}", count);
@@ -85,23 +84,24 @@ fn part_2(file_path: &str) -> i32 {
         //     count +=1;
         // }
         // why the above does not work - loop until no fails ¯\_(ツ)_/¯
-        
+
         // instead the below ugly - keep applying rules until all updates are ordered correctly
-        
+
         _ = apply_rules_to(man_update, rules.clone());
         _ = apply_rules_to(man_update, rules.clone());
         _ = apply_rules_to(man_update, rules.clone());
     }
     // println!("{:?}", updates_failing_rule_check);
-    let result = updates_failing_rule_check.iter()
-        .map(|x| x[(x.len()-1)/2])
+    let result = updates_failing_rule_check
+        .iter()
+        .map(|x| x[(x.len() - 1) / 2])
         .sum();
     result
 }
 
 fn apply_rules_to(update: &mut Vec<i32>, rules: Vec<(i32, i32)>) -> bool {
     let mut any_fails = false;
-    
+
     for rule in rules {
         match update_rule_check(update, &rule) {
             RuleCheckResult::DoesNotApply => continue,
@@ -109,12 +109,11 @@ fn apply_rules_to(update: &mut Vec<i32>, rules: Vec<(i32, i32)>) -> bool {
             RuleCheckResult::Fail => {
                 let index_1 = match update.iter().position(|n| n == &rule.0) {
                     Some(n) => n,
-                    None           => panic!("Rule: {:?} index 1 not found!", &rule.0)
-        
+                    None => panic!("Rule: {:?} index 1 not found!", &rule.0),
                 };
                 let index_2 = match update.iter().position(|n| n == &rule.1) {
                     Some(n) => n,
-                    None           => panic!("Rule: {:?} index 1 not found!", &rule.0)
+                    None => panic!("Rule: {:?} index 1 not found!", &rule.0),
                 };
                 // update.swap(index_1, index_2);
                 let tmp_val = update.remove(index_2);
@@ -225,34 +224,34 @@ mod tests {
         assert_eq!(manual_updates[0], vec![75, 47, 61, 53, 29]);
     }
 
-    #[test] 
+    #[test]
     fn test_apply_rules_to_simple() {
         // apply_rules_to(update: &mut Vec<i32>, rules: Vec<(i32, i32)>)
-        let mut man_update = vec![1,2,3,4,5];
-        let rule = vec![(3,2)];
+        let mut man_update = vec![1, 2, 3, 4, 5];
+        let rule = vec![(3, 2)];
         apply_rules_to(&mut man_update, rule);
-        assert_eq!(man_update, vec![1,3,2,4,5]);
+        assert_eq!(man_update, vec![1, 3, 2, 4, 5]);
     }
 
-    #[test] 
+    #[test]
     fn test_apply_rules_to_examples() {
         let (rules, manual_updates) = parse_file(EXAMPLE_FILEPATH);
 
         // example 1
-        let mut man_update = vec![75,97,47,61,53 ];
+        let mut man_update = vec![75, 97, 47, 61, 53];
         apply_rules_to(&mut man_update, rules.clone());
-        assert_eq!(man_update, vec![97,75,47,61,53]);
+        assert_eq!(man_update, vec![97, 75, 47, 61, 53]);
 
         // example 2
-        man_update = vec![61,13,29 ];
+        man_update = vec![61, 13, 29];
         apply_rules_to(&mut man_update, rules.clone());
-        assert_eq!(man_update, vec![61,29,13]);
+        assert_eq!(man_update, vec![61, 29, 13]);
 
         // example 3
-        man_update = vec![97,13,75,29,47];
+        man_update = vec![97, 13, 75, 29, 47];
         apply_rules_to(&mut man_update, rules.clone());
         apply_rules_to(&mut man_update, rules.clone());
         apply_rules_to(&mut man_update, rules.clone());
-        assert_eq!(man_update, vec![97,75,47,29,13]);
+        assert_eq!(man_update, vec![97, 75, 47, 29, 13]);
     }
 }
