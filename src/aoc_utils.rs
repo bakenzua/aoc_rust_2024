@@ -50,7 +50,7 @@ i/ *   O   O   * \i
     print!("{tree_ascii}\n\n")
 }
 
-pub enum Direction {
+pub enum CompassDirection {
     North,
     NorthEast,
     East,
@@ -68,35 +68,35 @@ pub struct GridCoordinate {
 }
 
 impl GridCoordinate {
-    pub fn move_direction(&mut self, direction: &Direction, distance: i32) {
+    pub fn move_direction(&mut self, direction: &CompassDirection, distance: i32) {
         //-> GridCoordinate {
         match direction {
-            Direction::North => {
+            CompassDirection::North => {
                 self.y += distance;
             }
-            Direction::NorthEast => {
+            CompassDirection::NorthEast => {
                 self.x += distance;
                 self.y += distance;
             }
-            Direction::East => {
+            CompassDirection::East => {
                 self.x += distance;
             }
-            Direction::SouthEast => {
+            CompassDirection::SouthEast => {
                 self.x += distance;
                 self.y -= distance;
             }
-            Direction::South => {
+            CompassDirection::South => {
                 self.y -= distance;
             }
-            Direction::SouthWest => {
+            CompassDirection::SouthWest => {
                 self.x -= distance;
 
                 self.y -= distance;
             }
-            Direction::West => {
+            CompassDirection::West => {
                 self.x -= distance;
             }
-            Direction::NorthWest => {
+            CompassDirection::NorthWest => {
                 self.x -= distance;
                 self.y += distance;
             }
@@ -113,18 +113,18 @@ mod tests {
     fn test_move_direction_north() {
         let mut ge = GridCoordinate { x: 1, y: 1 };
 
-        ge.move_direction(&Direction::North, 1);
+        ge.move_direction(&CompassDirection::North, 1);
 
         assert_eq!(ge.y, 2);
 
-        ge.move_direction(&Direction::North, 2);
+        ge.move_direction(&CompassDirection::North, 2);
 
         assert_eq!(ge.y, 4);
     }
     #[test]
     fn test_move_direction_west() {
         let mut ge = GridCoordinate { x: 1, y: 1 };
-        ge.move_direction(&Direction::East, 1);
+        ge.move_direction(&CompassDirection::East, 1);
 
         assert_eq!(ge.x, 2);
     }

@@ -1,6 +1,6 @@
 #![allow(unused_variables)]
 
-use crate::aoc_utils::{Direction, GridCoordinate};
+use crate::aoc_utils::{CompassDirection, GridCoordinate};
 use std::{collections::HashMap, fs::read_to_string};
 
 const EXAMPLE_FILEPATH: &str = "./data/example_4.txt";
@@ -42,14 +42,14 @@ fn part_1(file_path: &str) -> i32 {
     for pos in grid.keys() {
         if grid.get(pos).unwrap() == &'X' {
             for direction in [
-                Direction::North,
-                Direction::NorthEast,
-                Direction::East,
-                Direction::SouthEast,
-                Direction::South,
-                Direction::SouthWest,
-                Direction::West,
-                Direction::NorthWest,
+                CompassDirection::North,
+                CompassDirection::NorthEast,
+                CompassDirection::East,
+                CompassDirection::SouthEast,
+                CompassDirection::South,
+                CompassDirection::SouthWest,
+                CompassDirection::West,
+                CompassDirection::NorthWest,
             ] {
                 let mut current_location = pos.clone();
                 let mut candidate = String::new();
@@ -80,16 +80,16 @@ fn part_2(file_path: &str) -> i32 {
             let mut diag1 = String::new();
             let mut diag2 = String::new();
 
-            current_location.move_direction(&Direction::NorthWest, 1);
+            current_location.move_direction(&CompassDirection::NorthWest, 1);
             diag1.push(*grid.get(&current_location).unwrap_or(&'%'));
             diag1.push('A');
-            current_location.move_direction(&Direction::SouthEast, 2);
+            current_location.move_direction(&CompassDirection::SouthEast, 2);
             diag1.push(*grid.get(&current_location).unwrap_or(&'%'));
 
-            current_location.move_direction(&Direction::West, 2);
+            current_location.move_direction(&CompassDirection::West, 2);
             diag2.push(*grid.get(&current_location).unwrap_or(&'%'));
             diag2.push('A');
-            current_location.move_direction(&Direction::NorthEast, 2);
+            current_location.move_direction(&CompassDirection::NorthEast, 2);
             diag2.push(*grid.get(&current_location).unwrap_or(&'%'));
             if targets.contains(&&diag1.as_str()) && targets.contains(&&diag2.as_str()) {
                 score = score + 1;
