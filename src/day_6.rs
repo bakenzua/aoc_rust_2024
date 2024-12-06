@@ -74,7 +74,7 @@ struct SuitLabMap {
     directional_history: HashSet<(GridCoordinate, SuitLabDirection)>,
     xmax: i32,
     ymax: i32,
-    guardpos: GridCoordinate
+    guardpos: GridCoordinate,
 }
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy)]
@@ -98,16 +98,18 @@ impl SuitLabMap {
 
         while current_direction != SuitLabDirection::OffMap {
             current_direction = map_clone.move_step(current_direction);
-            if map_clone.directional_history.contains(&(map_clone.guardpos, current_direction)) {
+            if map_clone
+                .directional_history
+                .contains(&(map_clone.guardpos, current_direction))
+            {
                 return true;
             }
         }
 
         false
     }
-    
-    pub fn move_step(&mut self, direction: SuitLabDirection) -> SuitLabDirection {
 
+    pub fn move_step(&mut self, direction: SuitLabDirection) -> SuitLabDirection {
         let mut dest = GridCoordinate { x: 0, y: 0 };
         self.history.insert(self.guardpos);
         self.directional_history.insert((self.guardpos, direction));
@@ -241,7 +243,7 @@ fn parse_file(file_path: &str) -> SuitLabMap {
         directional_history: HashSet::new(),
         xmax: xmax,
         ymax: ymax,
-        guardpos: guardpos
+        guardpos: guardpos,
     }
 }
 
@@ -291,5 +293,4 @@ mod tests {
         slm.obstacles.insert(GridCoordinate { x: 2, y: 6 });
         assert!(!slm.is_loop_map());
     }
-
 }

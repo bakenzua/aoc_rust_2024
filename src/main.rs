@@ -6,6 +6,7 @@ mod day_2;
 mod day_3;
 mod day_4;
 mod day_5;
+mod day_5_sort;
 mod day_6;
 
 fn main() {
@@ -34,7 +35,8 @@ fn main() {
         2 => day_2::run(part),
         3 => day_3::run(part),
         4 => day_4::run(part),
-        5 => day_5::run(part),
+        5 => day_5_sort::run(part),
+        55 => day_5::run(part),
         6 => day_6::run(part),
         _ => {
             println!("Solution for day {} part {} not found.", day, part);
@@ -44,6 +46,6 @@ fn main() {
 
     let elapsed = start.elapsed();
     println!("Elapsed: {:.2?}", elapsed);
-    
+
     println!("\n\n")
 }
