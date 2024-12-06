@@ -33,7 +33,6 @@ pub fn run(part: i16) {
 }
 
 fn part_1(file_path: &str) -> i32 {
-
     let mut slm = parse_file(file_path);
     let mut current_direction: SuitLabDirection = SuitLabDirection::Down;
 
@@ -53,12 +52,14 @@ fn part_2(file_path: &str) -> i32 {
         current_direction = slm.move_step(current_direction);
     }
     let original_path = slm.history.drain();
-    
+
     // start with clean map
     let slm = parse_file(file_path);
     for pos in original_path {
         let mut new_slm = slm.clone();
-        _ = new_slm.obstacles.insert(GridCoordinate {x: pos.x, y: pos.y});
+        _ = new_slm
+            .obstacles
+            .insert(GridCoordinate { x: pos.x, y: pos.y });
         if new_slm.is_loop_map() {
             loop_n += 1;
         }
@@ -70,55 +71,46 @@ fn part_2(file_path: &str) -> i32 {
 struct SuitLabMap {
     obstacles: HashSet<GridCoordinate>,
     history: HashSet<GridCoordinate>,
+    directional_history: HashSet<(GridCoordinate, SuitLabDirection)>,
     xmax: i32,
     ymax: i32,
-    guardpos: GridCoordinate,
-    steps_since_fresh: i32
+    guardpos: GridCoordinate
 }
 
-#[derive(PartialEq, Clone, Copy)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy)]
 enum SuitLabDirection {
     Up,
     Right,
     Left,
-    Down, 
-    OffMap
+    Down,
+    OffMap,
 }
 
 impl SuitLabMap {
-
     fn off_map(&self, coord: GridCoordinate) -> bool {
-        (coord.x < 0) || (coord.x > self.xmax) || (coord.y < 0) || (coord.y > self.ymax) 
-    }
-
-    pub fn max_loop_size(&self) -> i32 {
-        (self.xmax + self.ymax) * 2
+        (coord.x < 0) || (coord.x > self.xmax) || (coord.y < 0) || (coord.y > self.ymax)
     }
 
     pub fn is_loop_map(&self) -> bool {
         let mut map_clone = self.clone();
         let mut current_direction = SuitLabDirection::Down;
-        let max_loop_size = map_clone.max_loop_size();
+        // let max_loop_size = map_clone.max_loop_size();
 
         while current_direction != SuitLabDirection::OffMap {
             current_direction = map_clone.move_step(current_direction);
-            if map_clone.steps_since_fresh >= max_loop_size {
-                return true
+            if map_clone.directional_history.contains(&(map_clone.guardpos, current_direction)) {
+                return true;
             }
         }
-        
+
         false
     }
+    
     pub fn move_step(&mut self, direction: SuitLabDirection) -> SuitLabDirection {
-        
-        let mut dest = GridCoordinate{x:0, y:0};
-        if self.history.contains(&self.guardpos) {
-            self.steps_since_fresh += 1;
-        } else {
-            self.history.insert(self.guardpos.clone());
-            self.steps_since_fresh = 0;
-        }
-        
+
+        let mut dest = GridCoordinate { x: 0, y: 0 };
+        self.history.insert(self.guardpos);
+        self.directional_history.insert((self.guardpos, direction));
 
         match direction {
             SuitLabDirection::Up => {
@@ -126,70 +118,70 @@ impl SuitLabMap {
                 dest.x = self.guardpos.x;
 
                 if self.obstacles.contains(&dest) {
-                    return SuitLabDirection::Right
+                    return SuitLabDirection::Right;
                 } else if self.off_map(dest) {
                     return SuitLabDirection::OffMap;
                 } else {
                     self.guardpos = dest;
-                    return direction
+                    return direction;
                 }
-            },
+            }
             SuitLabDirection::Left => {
                 dest.y = self.guardpos.y;
                 dest.x = self.guardpos.x + 1;
 
                 if self.obstacles.contains(&dest) {
-                    return SuitLabDirection::Up
+                    return SuitLabDirection::Up;
                 } else if self.off_map(dest) {
                     return SuitLabDirection::OffMap;
                 } else {
                     self.guardpos = dest;
-                    return direction
+                    return direction;
                 }
-            },
+            }
             SuitLabDirection::Right => {
                 dest.y = self.guardpos.y;
                 dest.x = self.guardpos.x - 1;
 
                 if self.obstacles.contains(&dest) {
-                    return SuitLabDirection::Down
+                    return SuitLabDirection::Down;
                 } else if self.off_map(dest) {
                     return SuitLabDirection::OffMap;
                 } else {
                     self.guardpos = dest;
-                    return direction
+                    return direction;
                 }
-            },
+            }
             SuitLabDirection::Down => {
                 dest.y = self.guardpos.y - 1;
                 dest.x = self.guardpos.x;
 
                 if self.obstacles.contains(&dest) {
-                    return SuitLabDirection::Left
+                    return SuitLabDirection::Left;
                 } else if self.off_map(dest) {
                     return SuitLabDirection::OffMap;
                 } else {
                     self.guardpos = dest;
-                    return direction
+                    return direction;
                 }
-            },
-            _ => return SuitLabDirection::OffMap
+            }
+            _ => return SuitLabDirection::OffMap,
         }
-
     }
-    
 }
 
 impl fmt::Display for SuitLabMap {
     // This trait requires `fmt` with this exact signature.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut output_str = String::new();
-        for _ in 0..=self.xmax {output_str.push('=')};
+        for _ in 0..=self.xmax {
+            output_str.push('=')
+        }
         output_str.push('\n');
 
         for y in 0..=self.ymax {
             for x in 0..=self.xmax {
-                let coord = GridCoordinate{x:x, y:y};
+                let coord = GridCoordinate { x: x, y: y };
                 if self.obstacles.contains(&coord) {
                     output_str.push('#');
                 } else if self.guardpos == coord {
@@ -201,7 +193,9 @@ impl fmt::Display for SuitLabMap {
             output_str.push('\n');
         }
 
-        for _ in 0..=self.xmax {output_str.push('=')};
+        for _ in 0..=self.xmax {
+            output_str.push('=')
+        }
         output_str.push('\n');
 
         write!(f, "{}", output_str)
@@ -212,7 +206,7 @@ fn parse_file(file_path: &str) -> SuitLabMap {
     let filetxt = read_to_string(file_path).expect("File should be read to string");
 
     let mut obstacles: HashSet<GridCoordinate> = HashSet::new();
-    let mut guardpos = GridCoordinate{x:0, y:0};
+    let mut guardpos = GridCoordinate { x: 0, y: 0 };
 
     for (y, line) in filetxt.lines().enumerate() {
         for (x, c) in line.chars().enumerate() {
@@ -235,16 +229,19 @@ fn parse_file(file_path: &str) -> SuitLabMap {
     }
 
     let ymax: i32 = filetxt.lines().count() as i32 - 1;
-    let firstline = filetxt.lines().next().expect("Could not get line from string");
+    let firstline = filetxt
+        .lines()
+        .next()
+        .expect("Could not get line from string");
     let xmax: i32 = firstline.chars().count() as i32 - 1;
 
     SuitLabMap {
         obstacles: obstacles,
         history: HashSet::new(),
+        directional_history: HashSet::new(),
         xmax: xmax,
         ymax: ymax,
-        guardpos: guardpos,
-        steps_since_fresh: 0
+        guardpos: guardpos
     }
 }
 
@@ -284,23 +281,15 @@ mod tests {
     #[test]
     fn test_is_loop_map() {
         let mut slm = parse_file(EXAMPLE_FILEPATH);
-        slm.obstacles.insert(GridCoordinate{x:3,y:6});
+        slm.obstacles.insert(GridCoordinate { x: 3, y: 6 });
         assert!(slm.is_loop_map());
     }
 
     #[test]
     fn test_is_not_loop_map() {
         let mut slm = parse_file(EXAMPLE_FILEPATH);
-        slm.obstacles.insert(GridCoordinate{x:2,y:6});
+        slm.obstacles.insert(GridCoordinate { x: 2, y: 6 });
         assert!(!slm.is_loop_map());
     }
 
-    #[test]
-    fn test_max_loop_size() {
-        let slm = parse_file(EXAMPLE_FILEPATH);
-        assert_eq!(
-            slm.max_loop_size(),
-            9*4
-        )
-    }
 }
