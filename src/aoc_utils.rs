@@ -47,7 +47,7 @@ i/ *   O   O   * \i
 /=================\
        |___|
     "#;
-    print!("{tree_ascii}\n\n")
+    print!("\n\n{tree_ascii}\n")
 }
 
 pub enum CompassDirection {

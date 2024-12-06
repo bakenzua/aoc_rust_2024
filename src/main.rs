@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, time::Instant};
 
 mod aoc_utils;
 mod day_1;
@@ -20,14 +20,15 @@ fn main() {
     let part: i16 = args[2].parse().expect("Please provide a part number.");
 
     aoc_utils::print_xmas_tree();
-    println!("\n\n//===========================================//");
+    println!("//===========================================//");
     println!(
         "//       Advent of code: Day {}, part {}       //",
         day, part
     );
     println!("//===========================================//\n");
 
-    // let start = Instant::now();
+    let start = Instant::now();
+
     match day {
         1 => day_1::run(part),
         2 => day_2::run(part),
@@ -40,5 +41,9 @@ fn main() {
             std::process::exit(1);
         }
     }
+
+    let elapsed = start.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
+    
     println!("\n\n")
 }
