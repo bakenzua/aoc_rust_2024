@@ -55,7 +55,42 @@ fn eq_has_solutions(answer: i64, current: i64, operands: &[i64]) -> bool {
 }
 
 fn part_2(file_path: &str) -> i64 {
-    0
+    let calibrations = parse_file(file_path);
+
+    let result = calibrations
+        .into_iter()
+        .filter(|x| eq_has_solutions_part2(x.0, 0, &x.1))
+        .map(|x| x.0)
+        .sum();
+
+    result
+}
+
+fn eq_has_solutions_part2(answer: i64, current: i64, operands: &[i64]) -> bool {
+    if operands.is_empty() {
+        return answer == current;
+    }
+    if answer < current {
+        return false;
+    }
+    let next_operand = *operands.first().unwrap();
+
+    eq_has_solutions_part2(answer, current + next_operand, &operands[1..])
+        || eq_has_solutions_part2(answer, current * next_operand, &operands[1..])
+        || eq_has_solutions_part2(
+            answer,
+            concat_operator(current, next_operand),
+            &operands[1..],
+        )
+}
+
+fn concat_operator(a: i64, b: i64) -> i64 {
+    // let a_str = a as &str;
+
+    // let conc = ; //a as str
+    format!("{a}{b}")
+        .parse::<i64>()
+        .expect("Could not parse concat values")
 }
 
 fn parse_file(file_path: &str) -> Vec<(i64, Vec<i64>)> {
@@ -66,7 +101,6 @@ fn parse_file(file_path: &str) -> Vec<(i64, Vec<i64>)> {
         let parts = line
             .split_once(":")
             .expect("Could not split line on ':': {line}");
-        println!("{:?}", parts);
         let answer = parts
             .0
             .parse::<i64>()
@@ -102,7 +136,7 @@ mod tests {
     #[test]
     fn test_part_2() {
         // assert!(true);
-        assert_eq!(6, part_2(EXAMPLE_FILEPATH));
+        assert_eq!(11387, part_2(EXAMPLE_FILEPATH));
     }
 
     #[test]
@@ -114,5 +148,22 @@ mod tests {
         assert_eq!(example[0].0, 190);
 
         assert_eq!(example[1].1.len(), 3)
+    }
+
+    #[test]
+    fn test_concat_operator() {
+        assert_eq!(concat_operator(1, 2), 12)
+    }
+
+    #[test]
+    fn test_eq_has_solutions2() {
+        assert!(eq_has_solutions_part2(156, 15, &vec![6 as i64]));
+        assert!(eq_has_solutions_part2(
+            7290,
+            6,
+            &vec![8 as i64, 6 as i64, 15 as i64]
+        ));
+
+        // 7290: 6 8 6 15
     }
 }
