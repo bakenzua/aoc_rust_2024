@@ -9,6 +9,7 @@ mod day_5;
 mod day_5_sort;
 mod day_6;
 mod day_7;
+mod day_8;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -40,6 +41,7 @@ fn main() {
         55 => day_5::run(part),
         6 => day_6::run(part),
         7 => day_7::run(part),
+        8 => day_8::run(part),
         _ => {
             println!("Solution for day {} part {} not found.", day, part);
             std::process::exit(1);
