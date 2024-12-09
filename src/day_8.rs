@@ -280,6 +280,6 @@ mod tests {
     fn test_in_map_bounds() {
         let antenna_map = parse_file(EXAMPLE_FILEPATH);
 
-        assert!(antenna_map.in_map_bounds((12, 12)));
+        assert!(!antenna_map.in_map_bounds((12, 12)));
     }
 }
