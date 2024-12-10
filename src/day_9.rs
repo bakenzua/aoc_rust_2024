@@ -34,14 +34,10 @@ fn parse_disk(file_path: &str) -> Vec<Option<i64>> {
     let file_iter = file_text
         .trim()
         .chars()
-        .map(
-            |c| {
-                match c.to_digit(10) {
-                    Some(n) => n as i64,
-                    None => panic!("Could not convert {c} to digit!")
-                }
-            }
-        )
+        .map(|c| match c.to_digit(10) {
+            Some(n) => n as i64,
+            None => panic!("Could not convert {c} to digit!"),
+        })
         .enumerate();
 
     let mut disk: Vec<Option<i64>> = Vec::new();
@@ -65,7 +61,6 @@ fn parse_disk(file_path: &str) -> Vec<Option<i64>> {
 }
 
 fn part_1(file_path: &str) -> i64 {
-    
     let mut disk = parse_disk(file_path);
 
     let mut start = 0;
@@ -91,8 +86,7 @@ fn part_1(file_path: &str) -> i64 {
 }
 
 fn checksum(data: &Vec<Option<i64>>) -> i64 {
-    data
-        .iter()
+    data.iter()
         .enumerate()
         .map(|(i, v)| match v {
             Some(n) => (i as i64) * n,
@@ -103,8 +97,7 @@ fn checksum(data: &Vec<Option<i64>>) -> i64 {
 }
 
 fn part_2(file_path: &str) -> i64 {
-    
-    let mut disk = parse_disk(file_path);
+    let disk = parse_disk(file_path);
     0
 }
 
