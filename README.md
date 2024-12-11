@@ -3,6 +3,7 @@
 My progress with [Advent of Code 2024](https://adventofcode.com/2024) whilst trying to learn rust.
 
 See the description of the puzzles at <https://adventofcode.com/>.
+
 Many thanks to Eric Wastl for providing these challenges.
 
 MIT License\
