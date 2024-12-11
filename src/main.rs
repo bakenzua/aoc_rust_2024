@@ -2,7 +2,6 @@ use std::{env, time::Instant};
 
 mod aoc_utils;
 mod day_1;
-mod day_10;
 mod day_2;
 mod day_3;
 mod day_4;
@@ -12,6 +11,8 @@ mod day_6;
 mod day_7;
 mod day_8;
 mod day_9;
+mod day_10;
+mod day_11;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -46,6 +47,7 @@ fn main() {
         8 => day_8::run(part),
         9 => day_9::run(part),
         10 => day_10::run(part),
+        11 => day_11::run(part),
         _ => {
             println!("Solution for day {} part {} not found.", day, part);
             std::process::exit(1);
