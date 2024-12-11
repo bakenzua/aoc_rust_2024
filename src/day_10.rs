@@ -1,8 +1,7 @@
 #![allow(unused_variables)]
 
 use std::{
-    collections::HashMap,
-    fs::read_to_string,
+    collections::HashMap
 };
 
 use crate::aoc_utils;
