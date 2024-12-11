@@ -1,4 +1,4 @@
-use std::fs::read_to_string;
+use std::{collections::HashMap, fs::read_to_string};
 
 pub fn get_two_numbers_from_lines(file_path: &str) -> (Vec<i32>, Vec<i32>) {
     let mut left_list: Vec<i32> = Vec::new();
@@ -48,6 +48,23 @@ i/ *   O   O   * \i
        |___|
     "#;
     print!("\n\n{tree_ascii}\n")
+}
+
+pub fn parse_aoc_map(file_path: &str) -> HashMap<(i32, i32), i32> {
+    let file_txt = read_to_string(file_path).expect("Could not read file: {file_path");
+    let file_lines = file_txt.lines();
+
+    let mut aoc_map: HashMap<(i32, i32), i32> = HashMap::new();
+    let mut y: i32 = 0;
+
+    for line in file_lines {
+        for coord in line.chars().enumerate() {
+            let x: i32 = coord.0 as i32;
+            aoc_map.insert((x, y), coord.1.to_digit(10).unwrap() as i32);
+        }
+        y += 1;
+    }
+    aoc_map
 }
 
 pub enum CompassDirection {
