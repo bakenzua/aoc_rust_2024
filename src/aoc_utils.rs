@@ -67,6 +67,23 @@ pub fn parse_aoc_map(file_path: &str) -> HashMap<(i32, i32), i32> {
     aoc_map
 }
 
+pub fn parse_aoc_char_map(file_path: &str) -> HashMap<(i32, i32), char> {
+    let file_txt = read_to_string(file_path).expect("Could not read file: {file_path");
+    let file_lines = file_txt.lines();
+
+    let mut aoc_map: HashMap<(i32, i32), char> = HashMap::new();
+    let mut y: i32 = 0;
+
+    for line in file_lines {
+        for coord in line.chars().enumerate() {
+            let x: i32 = coord.0 as i32;
+            aoc_map.insert((x, y), coord.1);
+        }
+        y += 1;
+    }
+    aoc_map
+}
+
 pub enum CompassDirection {
     North,
     NorthEast,
