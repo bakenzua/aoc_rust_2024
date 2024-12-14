@@ -33,12 +33,11 @@ pub fn run(part: i16) {
 
 fn parse_input(file_path: &str) -> HashMap<i64, i64> {
     let file_str = read_to_string(file_path).expect("Could not read file: {file_path");
-    let integers: Vec<i64> = file_str.trim()
-    .split_whitespace()
-    .map(
-        |st| st.parse::<i64>().expect("Could not parse: {st}")
-    )
-    .collect();
+    let integers: Vec<i64> = file_str
+        .trim()
+        .split_whitespace()
+        .map(|st| st.parse::<i64>().expect("Could not parse: {st}"))
+        .collect();
     let mut stones = HashMap::new();
     for integer in integers {
         insert_stone(&integer, 1, &mut stones);
@@ -49,7 +48,7 @@ fn parse_input(file_path: &str) -> HashMap<i64, i64> {
 fn insert_stone(stone: &i64, ns: i64, stones: &mut HashMap<i64, i64>) {
     match stones.get(&stone) {
         Some(n) => stones.insert(*stone, n + ns),
-        None => stones.insert(*stone, ns)
+        None => stones.insert(*stone, ns),
     };
 }
 
@@ -74,14 +73,18 @@ fn blink(stones: HashMap<i64, i64>) -> HashMap<i64, i64> {
 
 fn part_1(file_path: &str) -> i64 {
     let mut stones = parse_input(file_path);
-    for _ in 0..25 { stones = blink(stones) }
-    stones.values().sum::<i64>() 
+    for _ in 0..25 {
+        stones = blink(stones)
+    }
+    stones.values().sum::<i64>()
 }
 
 fn part_2(file_path: &str) -> i64 {
     let mut stones = parse_input(file_path);
-    for _ in 0..75 { stones = blink(stones) }
-    stones.values().sum::<i64>() 
+    for _ in 0..75 {
+        stones = blink(stones)
+    }
+    stones.values().sum::<i64>()
 }
 
 ///////////////////////////////////////////
@@ -95,22 +98,19 @@ mod tests {
 
     #[test]
     fn test_blink() {
-        
         let mut stones = parse_input(EXAMPLE_FILEPATH);
-        for _ in 0..6 {stones = blink(stones)}
-        
-        assert_eq!(
-            stones.values().sum::<i64>(),
-            22
-        );
+        for _ in 0..6 {
+            stones = blink(stones)
+        }
+
+        assert_eq!(stones.values().sum::<i64>(), 22);
 
         let mut stones = parse_input(EXAMPLE_FILEPATH);
-        for _ in 0..25 {stones = blink(stones)}
-        
-        assert_eq!(
-            stones.values().sum::<i64>(),
-            55312
-        );
+        for _ in 0..25 {
+            stones = blink(stones)
+        }
+
+        assert_eq!(stones.values().sum::<i64>(), 55312);
     }
 
     #[test]
@@ -128,34 +128,19 @@ mod tests {
     fn test_insert_stone() {
         let mut stones: HashMap<i64, i64> = HashMap::new();
         insert_stone(&1, 1, &mut stones);
-        assert_eq!(
-            stones.get(&1).unwrap(),
-            &1
-        );
+        assert_eq!(stones.get(&1).unwrap(), &1);
         insert_stone(&1, 1, &mut stones);
-        assert_eq!(
-            stones.get(&1).unwrap(),
-            &2
-        );
+        assert_eq!(stones.get(&1).unwrap(), &2);
 
         let mut stones: HashMap<i64, i64> = HashMap::new();
         insert_stone(&4048, 2, &mut stones);
-        assert_eq!(
-            stones.get(&4048).unwrap(),
-            &2
-        );
+        assert_eq!(stones.get(&4048).unwrap(), &2);
     }
 
     #[test]
     fn test_parse_input() {
         let stones = parse_input(EXAMPLE_FILEPATH);
-        assert_eq!(
-            Some(&1),
-            stones.get(&125)
-        );
-        assert_eq!(
-            Some(&1),
-            stones.get(&17)
-        );
+        assert_eq!(Some(&1), stones.get(&125));
+        assert_eq!(Some(&1), stones.get(&17));
     }
 }

@@ -143,21 +143,20 @@ pub fn n_digits(x: &i64) -> i64 {
 }
 
 pub fn even_digits(x: &i64) -> bool {
-    !(*x<10) && n_digits(x) % 2 == 0
+    !(*x < 10) && n_digits(x) % 2 == 0
 }
 
 pub fn split_digits(x: &i64) -> Option<(i64, i64)> {
-    
     let n = n_digits(x);
-    let mut result = (0,0);
+    let mut result = (0, 0);
     if n % 2 == 0 {
         result.0 = x / 10_i64.pow(n_digits(x) as u32 / 2);
         // dbg!(result.0);
         result.1 = x - (result.0 * 10_i64.pow(n_digits(x) as u32 / 2));
         // dbg!(result.1);
-        return Some(result)
+        return Some(result);
     } else {
-        return None
+        return None;
     }
     // result
 }
@@ -197,21 +196,9 @@ mod tests {
     fn test_split_digits() {
         // println!("{:?}", split_digits(&253000));
         // println!("{:?}", split_digits(&2));
-        assert_eq!(
-            split_digits(&1),
-            None
-        );
-        assert_eq!(
-            split_digits(&2),
-            None
-        );
-        assert_eq!(
-            split_digits(&253000),
-            Some((253, 0))
-        );
-        assert_eq!(
-            split_digits(&253001),
-            Some((253, 1))
-        );
+        assert_eq!(split_digits(&1), None);
+        assert_eq!(split_digits(&2), None);
+        assert_eq!(split_digits(&253000), Some((253, 0)));
+        assert_eq!(split_digits(&253001), Some((253, 1)));
     }
 }

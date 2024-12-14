@@ -1,8 +1,6 @@
 #![allow(unused_variables)]
 
-use std::{
-    collections::HashMap
-};
+use std::collections::HashMap;
 
 use crate::aoc_utils;
 
@@ -36,44 +34,47 @@ pub fn run(part: i16) {
 fn part_1(file_path: &str) -> i32 {
     let trail_map: HashMap<(i32, i32), i32> = aoc_utils::parse_aoc_map(file_path);
 
-    trail_map.iter().fold(
-        0, |mut acc, coord| {
-            if *coord.1 == 0 {
-                match nines_reachable_from(coord.0, &trail_map) {
-                    Some(mut nines) => {
-                        nines.sort_unstable();
-                        nines.dedup();
-                        acc += nines.len() as i32;
-                    },
-                    None => ()
+    trail_map.iter().fold(0, |mut acc, coord| {
+        if *coord.1 == 0 {
+            match nines_reachable_from(coord.0, &trail_map) {
+                Some(mut nines) => {
+                    nines.sort_unstable();
+                    nines.dedup();
+                    acc += nines.len() as i32;
                 }
-            };
-            acc
-        }
-    )
+                None => (),
+            }
+        };
+        acc
+    })
 }
 
 fn part_2(file_path: &str) -> i32 {
     let trail_map = aoc_utils::parse_aoc_map(file_path);
 
-    trail_map.iter().fold(
-        0, |mut acc, coord| {
-            if *coord.1 == 0 {
-               match nines_reachable_from(coord.0, &trail_map) {
-                    Some(nines) => {
-                        acc += nines.len() as i32;
-                    },
-                    None => ()
+    trail_map.iter().fold(0, |mut acc, coord| {
+        if *coord.1 == 0 {
+            match nines_reachable_from(coord.0, &trail_map) {
+                Some(nines) => {
+                    acc += nines.len() as i32;
                 }
-            };
-            acc
-        }
-    )
+                None => (),
+            }
+        };
+        acc
+    })
 }
 
-fn nines_reachable_from(coord: &(i32, i32), trail_map: &HashMap<(i32, i32), i32>) -> Option<Vec<(i32, i32)>> {
-    fn internal_recursive_call(coord: (i32, i32), trail_map: &HashMap<(i32, i32), i32>, current_elevation: &i32, mut reachable_nines: Vec<(i32, i32)>) -> Vec<(i32, i32)> {
-
+fn nines_reachable_from(
+    coord: &(i32, i32),
+    trail_map: &HashMap<(i32, i32), i32>,
+) -> Option<Vec<(i32, i32)>> {
+    fn internal_recursive_call(
+        coord: (i32, i32),
+        trail_map: &HashMap<(i32, i32), i32>,
+        current_elevation: &i32,
+        mut reachable_nines: Vec<(i32, i32)>,
+    ) -> Vec<(i32, i32)> {
         match trail_map.get(&coord) {
             Some(e) => {
                 if *e == current_elevation + 1 {
@@ -81,15 +82,14 @@ fn nines_reachable_from(coord: &(i32, i32), trail_map: &HashMap<(i32, i32), i32>
                     match nines {
                         Some(mut nines) => {
                             _ = reachable_nines.append(&mut nines);
-                        },
-                        None => ()
-
+                        }
+                        None => (),
                     }
                 }
             }
             None => (),
         }
-        return reachable_nines
+        return reachable_nines;
     }
 
     let mut tmp_coord = coord.clone();
@@ -102,30 +102,33 @@ fn nines_reachable_from(coord: &(i32, i32), trail_map: &HashMap<(i32, i32), i32>
     } else {
         // north
         tmp_coord = (tmp_coord.0, tmp_coord.1 + 1);
-        reachable_nines = internal_recursive_call(tmp_coord, trail_map, current_elevation, reachable_nines);
+        reachable_nines =
+            internal_recursive_call(tmp_coord, trail_map, current_elevation, reachable_nines);
 
         // south
         tmp_coord = coord.clone();
         tmp_coord = (tmp_coord.0, tmp_coord.1 - 1);
-        reachable_nines = internal_recursive_call(tmp_coord, trail_map, current_elevation, reachable_nines);
+        reachable_nines =
+            internal_recursive_call(tmp_coord, trail_map, current_elevation, reachable_nines);
 
         // east
         tmp_coord = coord.clone();
         tmp_coord = (tmp_coord.0 + 1, tmp_coord.1);
-        reachable_nines = internal_recursive_call(tmp_coord, trail_map, current_elevation, reachable_nines);
+        reachable_nines =
+            internal_recursive_call(tmp_coord, trail_map, current_elevation, reachable_nines);
 
         // west
         tmp_coord = coord.clone();
         tmp_coord = (tmp_coord.0 - 1, tmp_coord.1);
-        reachable_nines = internal_recursive_call(tmp_coord, trail_map, current_elevation, reachable_nines);
+        reachable_nines =
+            internal_recursive_call(tmp_coord, trail_map, current_elevation, reachable_nines);
     }
     if reachable_nines.is_empty() {
-        return None
-    } else  {
+        return None;
+    } else {
         return Some(reachable_nines);
     }
 }
-
 
 ///////////////////////////////////////////
 //   Some but not all tests
