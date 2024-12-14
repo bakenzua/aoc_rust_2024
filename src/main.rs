@@ -15,6 +15,7 @@ mod day_10;
 mod day_11;
 // mod day_12;
 mod day_13;
+mod day_14;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -52,6 +53,7 @@ fn main() {
         11 => day_11::run(part),
         // 12 => day_12::run(part),
         13 => day_13::run(part),
+        14 => day_14::run(part),
         _ => {
             println!("Solution for day {} part {} not found.", day, part);
             std::process::exit(1);

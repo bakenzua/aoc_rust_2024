@@ -162,20 +162,20 @@ impl ClawMachine {
     }
 
 
-    pub fn solve_claw_prize_ab(&self) -> Option<(i64, i64)> {
+    // pub fn solve_claw_prize_ab(&self) -> Option<(i64, i64)> {
     
-        // Cramers rule for 2x2
-        let d = (self.button_a.0 * self.button_b.1) - (self.button_a.1 * self.button_b.0);
-        let dx = (self.prize.0 * self.button_b.1) - (self.prize.1 * self.button_b.0);
-        let dy = (self.button_a.0 * self.prize.1) - (self.button_a.1 * self.prize.0);
+    //     // Cramers rule for 2x2
+    //     let d = (self.button_a.0 * self.button_b.1) - (self.button_a.1 * self.button_b.0);
+    //     let dx = (self.prize.0 * self.button_b.1) - (self.prize.1 * self.button_b.0);
+    //     let dy = (self.button_a.0 * self.prize.1) - (self.button_a.1 * self.prize.0);
 
-        // if non integer solution return None
-        if (dx % d == 0) && (dy % d == 0) {
-            return Some((dx/d, dy/d))
-        } else { 
-            return None 
-        }
-    }
+    //     // if non integer solution return None
+    //     if (dx % d == 0) && (dy % d == 0) {
+    //         return Some((dx/d, dy/d))
+    //     } else { 
+    //         return None 
+    //     }
+    // }
 }
 
 enum ClawDesc {
