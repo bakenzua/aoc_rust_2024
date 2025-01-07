@@ -1,17 +1,12 @@
-use std::{f32::DIGITS, fs::read_to_string};
+use std::{fmt::{self, Debug}, fs::read_to_string};
 
 use nom::{
-    bytes::complete::tag,
-    character::{self, complete::{
-        self, line_ending, multispace1, one_of,
-    }},
-    combinator::{all_consuming, opt},
-    multi::separated_list1,
-    sequence::{delimited, preceded, separated_pair},
-    IResult,
+    bytes::complete::tag, character::complete::{
+        self, digit1, line_ending, multispace1
+    }, combinator::map_res, multi::separated_list1, sequence::{delimited, preceded, separated_pair}, IResult
 };
 
-const EXAMPLE_FILEPATH: &str = "";
+const EXAMPLE_FILEPATH: &str = "./data/example_17.txt";
 
 const INPUT_FILEPATH: &str = "./data/input_17.txt";
 
@@ -41,16 +36,17 @@ pub fn run(part: i16) {
 
 fn part_1(file_path: &str) -> i64 {
     let file_str = read_to_string(file_path).expect("It reads the file");
-    let (_inout, (registers, instructions)) = parse(&file_str)
+    let (_input, (registers, instructions)) = parse(&file_str)
     .expect("It parsed the input");
-
+    println!("{:?}", registers);
+    println!("{:?}", instructions);
     
     0_i64
 }
 
 fn part_2(file_path: &str) -> i64 {
-    let file_str = read_to_string(file_path);
-    let (_inout, (registers, instructions)) = parse(file_str)
+    let file_str = read_to_string(file_path).expect("It reads the file");
+    let (_inout, (registers, instructions)) = parse(&file_str)
     .expect("It parsed the input");
 
     0_i64
@@ -61,6 +57,11 @@ struct Registers {
     b: i32,
     c: i32,
     pointer: usize
+}
+impl fmt::Debug for Registers {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "A: {}, B: {}, C: {}, Pointer: {}", self.a, self.b, self.c, self.pointer)
+    }
 }
 
 enum Instructions {
@@ -146,24 +147,30 @@ fn registers(input: &str) -> IResult<&str, Registers> {
     )
 }
 
-fn parse(input: &str,) -> IResult<&str, (Registers, Vec<Instructions>)> {
+fn parse(input: &str,) -> IResult<&str, (Registers, Vec<i32>)> {
     let (input, registers) =
         // registers(input);
         separated_pair(
             registers,
             multispace1,
             preceded(
-                "Program: ", 
-                second
+                tag("Program: "), 
+                separated_list1(nom::character::complete::char(','), parse_number)
             )
         )
         (input)?;
 
-    let (input, _) =
-        all_consuming(opt(line_ending))(input)?;
+    // let (input, _) =
+    //     all_consuming(opt(line_ending))(input)?;
 
-    Ok((input, (registers, instruction)))
+    Ok((input, registers))
 }
+
+// Parser to parse a single number
+fn parse_number(input: &str) -> IResult<&str, i32> {
+    map_res(digit1, str::parse::<i32>)(input)
+}
+
 ///////////////////////////////////////////
 //   Some but not all tests
 ///////////////////////////////////////////
